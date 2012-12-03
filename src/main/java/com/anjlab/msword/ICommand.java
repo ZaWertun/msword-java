@@ -6,7 +6,7 @@ import org.json.JSONObject;
 public interface ICommand
 {
 
-    static final String FIND_AND_REPLACE = "find_and_replace";
+    static final String REPLACE = "replace";
 
     void run(JSONObject commandJson, HWPFDocument doc) throws CommandException;
 

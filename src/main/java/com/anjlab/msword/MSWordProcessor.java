@@ -27,7 +27,7 @@ public class MSWordProcessor
         this.args = args;
         this.commands = new HashMap<String, ICommand>();
         
-        this.commands.put(ICommand.FIND_AND_REPLACE, new FindAndReplaceCommand());
+        this.commands.put(ICommand.REPLACE, new ReplaceCommand());
     }
     
     public void process() throws IOException, JSONException, CommandException
@@ -85,7 +85,7 @@ public class MSWordProcessor
   "output": "path/to/output_word.doc(x)",
   "commands": [
     {
-      "command": "find_and_replace",
+      "command": "replace",
       "args": [["what to find1", "replace with1"], ["what to find 2", "replace with 2"]]
     }
   ]

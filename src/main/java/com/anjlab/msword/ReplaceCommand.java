@@ -6,7 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class FindAndReplaceCommand implements ICommand
+public class ReplaceCommand implements ICommand
 {
     @Override
     public void run(JSONObject commandJson, HWPFDocument doc) throws CommandException
