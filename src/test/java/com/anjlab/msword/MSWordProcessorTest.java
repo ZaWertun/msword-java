@@ -31,6 +31,29 @@ public class MSWordProcessorTest
         processor.process();
     }
     
+    @Test
+    public void testFindAndReplaceInfiniteLoopDoc() throws Exception
+    {
+        
+        new File("target/testFindAndReplaceInfiniteLoopDoc").mkdirs();
+        
+        String input =
+                "{"
+                + "  'src':'src/test/resources/example.doc',"
+                + "  'output': 'target/testFindAndReplaceInfiniteLoopDoc/example.doc',"
+                + "  'commands': ["
+                + "    {"
+                + "      'command': 'replace',"
+                + "      'args': [['#to-replace', '#to-replace!']]"
+                + "    }"
+                + "  ]"
+                + "}";
+        
+        MSWordProcessor processor = new MSWordProcessor(new JSONObject(input));
+        
+        processor.process();
+    }
+
     @Ignore
     @Test
     public void testFindAndReplaceInDocx() throws Exception

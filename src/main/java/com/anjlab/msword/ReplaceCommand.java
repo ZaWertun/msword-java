@@ -21,12 +21,26 @@ public class ReplaceCommand implements ICommand
             {
                 JSONArray pair = args.getJSONArray(i);
                 
-                range.replaceText(pair.getString(0), pair.getString(1));
+                replaceText(range, pair.getString(0), pair.getString(1));
             }
         }
         catch (JSONException e)
         {
             throw new CommandException("Error executing command", e);
+        }
+    }
+    
+    private void replaceText(Range range, String pPlaceHolder, String pValue) {
+        boolean keepLooking = true;
+        int offset = -pValue.length();
+        while (keepLooking) {
+
+            String text = range.text();
+            offset = text.indexOf(pPlaceHolder, offset + pValue.length());
+            if (offset >= 0)
+                range.replaceText(pPlaceHolder, pValue, offset);
+            else
+                keepLooking = false;
         }
     }
 }
