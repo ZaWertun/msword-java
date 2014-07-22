@@ -31,31 +31,33 @@ public class Processor {
         }
     }
 
-    private static void replace(XWPFDocument document, List<Pattern> patterns) {
+    private static void replaceParagraphText(final XWPFParagraph paragraph, final Pattern pattern) {
+        List<XWPFRun> runs = paragraph.getRuns();
+        TextSegement segement = paragraph.searchText(pattern.search, new PositionInParagraph());
+        if (segement != null) {
+            int begin = segement.getBeginRun();
+            int end = segement.getEndRun();
+
+            runs.get(begin).setText(pattern.replace);
+            if (end > begin) {
+                for (int i = begin; i <= end; ++i) {
+                    runs.get(i).setText("", 0);
+                }
+            }
+        }
+    }
+
+    private static void replace(final XWPFDocument document, final List<Pattern> patterns) {
         for (Pattern p : patterns) {
             for (XWPFParagraph paragraph : document.getParagraphs()) {
-                for (XWPFRun r : paragraph.getRuns()) {
-                    String text = r.getText(0);
-
-                    if (text.contains(p.search)) {
-                        text = text.replace(p.search, p.replace);
-                        r.setText(text, 0);
-                    }
-                }
+                replaceParagraphText(paragraph, p);
             }
 
             for (XWPFTable table : document.getTables()) {
                 for (XWPFTableRow row : table.getRows()) {
                     for (XWPFTableCell cell : row.getTableCells()) {
                         for (XWPFParagraph paragraph : cell.getParagraphs()) {
-                            for (XWPFRun r : paragraph.getRuns()) {
-                                String text = r.getText(0);
-
-                                if (text.contains(p.search)) {
-                                    text = text.replace(p.search, p.replace);
-                                    r.setText(text, 0);
-                                }
-                            }
+                            replaceParagraphText(paragraph, p);
                         }
                     }
                 }
@@ -63,7 +65,8 @@ public class Processor {
         }
     }
 
-    public static void process(final DocumentType type, final File template, final List<Pattern> patterns)
+    public static void process(final DocumentType type, final File template,
+                               final List<Pattern> patterns)
             throws IOException, InvalidFormatException {
         InputStream input = null;
         OutputStream output = null;
@@ -79,14 +82,16 @@ public class Processor {
 
                     replace(document, patterns);
                     document.write(output);
-                } break;
+                }
+                break;
 
                 case DOCX: {
                     XWPFDocument document = new XWPFDocument(OPCPackage.open(input));
 
                     replace(document, patterns);
                     document.write(output);
-                } break;
+                }
+                break;
             }
         } finally {
             if (input != null) {
