@@ -39,7 +39,7 @@ public class Main {
         if (args.length < 2) {
             error(1, "Not enough arguments\n\n" +
                     "\tUsage: java -jar msword-java.jar <template_file_path> <json_array_with_patterns>\n" +
-                    "\tPattern syntax: [[\"what to find 1\", \"replace with 1\"], [\"what to find 2\", \"replace with 1\"], ...]");
+                    "\tPattern syntax: {\"what to find 1\": \"replace with 1\", \"what to find 2\": \"replace with 1\", ...]");
         }
 
         final File template = checkFile(args[0], false);
@@ -57,7 +57,7 @@ public class Main {
             patterns = Pattern.parseJson(args[1]);
         } catch (JSONException _) {
             error(6, "Third argument must be valid JSON array with format: " +
-                    "[[\"pattern_1\", \"replace_str_1\"], [\"pattern_2\", \"replace_str_2\"], ...]");
+                    "{\"pattern_1\": \"replace_str_1\", \"pattern_2\": \"replace_str_2\", ...}");
         }
         if (patterns.size() == 0) {
             error(7, "Pattern list is empty");

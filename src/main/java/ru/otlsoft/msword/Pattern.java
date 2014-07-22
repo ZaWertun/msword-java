@@ -1,7 +1,7 @@
 package ru.otlsoft.msword;
 
-import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +17,11 @@ public class Pattern {
 
     public static List<Pattern> parseJson(final String json)
             throws JSONException {
-        final JSONArray array = new JSONArray(json);
-        final List<Pattern> result = new ArrayList<Pattern>(array.length());
+        final JSONObject object = new JSONObject(json);
+        final List<Pattern> result = new ArrayList<>(object.keySet().size());
 
-        for (int i = 0; i < array.length(); ++i) {
-            JSONArray tmp = array.getJSONArray(i);
-            result.add(new Pattern(tmp.getString(0), tmp.getString(1)));
+        for (Object key : object.keySet()) {
+            result.add(new Pattern((String) key, object.getString((String) key)));
         }
 
         return result;
