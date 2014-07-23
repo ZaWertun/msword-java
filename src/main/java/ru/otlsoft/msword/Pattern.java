@@ -20,8 +20,11 @@ public class Pattern {
         final JSONObject object = new JSONObject(json);
         final List<Pattern> result = new ArrayList<>(object.keySet().size());
 
-        for (Object key : object.keySet()) {
-            result.add(new Pattern((String) key, object.getString((String) key)));
+        for (Object k : object.keySet()) {
+            String key = (String) k;
+            result.add(new Pattern(
+                    key,
+                    object.isNull(key) ? "" : object.get(key).toString()));
         }
 
         return result;

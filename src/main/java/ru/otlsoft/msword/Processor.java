@@ -38,7 +38,12 @@ public class Processor {
             int begin = segement.getBeginRun();
             int end = segement.getEndRun();
 
-            runs.get(begin).setText(pattern.replace);
+            if (pattern.replace.isEmpty()) {
+                runs.get(begin).setText("", 0);
+            } else {
+                runs.get(begin).setText(pattern.replace);
+            }
+
             if (end > begin) {
                 for (int i = begin; i <= end; ++i) {
                     runs.get(i).setText("", 0);
@@ -92,6 +97,9 @@ public class Processor {
                     document.write(output);
                 }
                 break;
+
+                default:
+                    throw new IllegalArgumentException("Unknown file type passed");
             }
         } finally {
             if (input != null) {

@@ -18,8 +18,8 @@ public class Main {
 
         if (checkWrite) {
             try {
-                if (!result.exists()) {
-                    result.createNewFile();
+                if (!result.exists() && !result.createNewFile()) {
+                    return null;
                 }
 
                 if (!result.canWrite()) {
@@ -55,7 +55,7 @@ public class Main {
         List<Pattern> patterns = null;
         try {
             patterns = Pattern.parseJson(args[1]);
-        } catch (JSONException _) {
+        } catch (JSONException e) {
             error(6, "Third argument must be valid JSON array with format: " +
                     "{\"pattern_1\": \"replace_str_1\", \"pattern_2\": \"replace_str_2\", ...}");
         }
