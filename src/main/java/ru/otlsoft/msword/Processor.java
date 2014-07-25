@@ -40,6 +40,8 @@ public class Processor {
 
             if (pattern.replace.isEmpty()) {
                 runs.get(begin).setText("", 0);
+            } else if (runs.size() == 1) {
+                runs.get(begin).setText(pattern.replace, 0);
             } else {
                 runs.get(begin).setText(pattern.replace);
             }
