@@ -36,10 +36,10 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        if (args.length < 2) {
+        if (args.length < 1) {
             error(1, "Not enough arguments\n\n" +
-                    "\tUsage: java -jar msword-java.jar <template_file_path> <json_array_with_patterns>\n" +
-                    "\tPattern syntax: {\"what to find 1\": \"replace with 1\", \"what to find 2\": \"replace with 1\", ...]");
+                    "\tUsage: java -jar msword-java.jar <template_file_path>\n" +
+                    "\tJSON object with patterns must be passed to standard input");
         }
 
         final File template = checkFile(args[0], false);
@@ -54,19 +54,20 @@ public class Main {
 
         List<Pattern> patterns = null;
         try {
-            patterns = Pattern.parseJson(args[1]);
+            patterns = Pattern.parseJson(System.in);
+        } catch (IOException e) {
+            error(6, "Error when reading from standard input: " + e.getMessage());
         } catch (JSONException e) {
-            error(6, "Third argument must be valid JSON array with format: " +
-                    "{\"pattern_1\": \"replace_str_1\", \"pattern_2\": \"replace_str_2\", ...}");
+            error(7, "You must pass valid JSON object to standard input");
         }
         if (patterns.size() == 0) {
-            error(7, "Pattern list is empty");
+            error(8, "Pattern list is empty");
         }
 
         try {
             Processor.process(templateType, template, patterns);
         } catch (IOException | InvalidFormatException e) {
-            error(8, e.getMessage());
+            error(9, e.getMessage());
         }
     }
 }

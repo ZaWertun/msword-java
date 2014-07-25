@@ -1,8 +1,12 @@
 package ru.otlsoft.msword;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +19,12 @@ public class Pattern {
         this.replace = replace;
     }
 
-    public static List<Pattern> parseJson(final String json)
-            throws JSONException {
-        final JSONObject object = new JSONObject(json);
+    public static List<Pattern> parseJson(final InputStream inputStream)
+            throws JSONException, IOException {
+        final StringWriter writer = new StringWriter();
+        IOUtils.copy(inputStream, writer);
+
+        final JSONObject object = new JSONObject(writer.toString());
         final List<Pattern> result = new ArrayList<>(object.keySet().size());
 
         for (Object k : object.keySet()) {
