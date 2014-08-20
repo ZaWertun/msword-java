@@ -5,6 +5,7 @@ Patterns in the template must be in form `${some_pattern_name}`.
 
 Also pattern can be specified as `${sub_object.sub_sub_object.property}` when property should be found in nested object(s).
 For pattern above corresponding JSON would look like:
+
 ```javascript
 {
     "sub_object": {
