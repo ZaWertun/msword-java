@@ -1,5 +1,6 @@
 package ru.otlsoft.msword;
 
+import javafx.util.Pair;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,9 +15,23 @@ public class Pattern {
     public final String search;
     public final String replace;
 
-    public Pattern(String search, String replace) {
-        this.search = "${" + search + "}";
-        this.replace = replace;
+    public Pattern(Pair<String, String> keyValuePair) {
+        this.search = "${" + keyValuePair.getKey() + "}";
+        this.replace = keyValuePair.getValue();
+    }
+
+    private static void parsePatterns(String parentKeyPath, JSONObject object, Callback<Pair<String, String>> callback) {
+        for (Object k : object.keySet()) {
+            String key = (String) k;
+            JSONObject subObject = object.optJSONObject(key);
+            String keyPath = (parentKeyPath == null) ? key : (parentKeyPath + '.' + key);
+            if (subObject != null) {
+                parsePatterns(keyPath, subObject, callback);
+            } else {
+                String value = object.isNull(key) ? "" : object.get(key).toString();
+                callback.run(new Pair<>(keyPath, value));
+            }
+        }
     }
 
     public static List<Pattern> parseJson(final InputStream inputStream)
@@ -26,13 +41,12 @@ public class Pattern {
 
         final JSONObject object = new JSONObject(writer.toString());
         final List<Pattern> result = new ArrayList<>(object.keySet().size());
-
-        for (Object k : object.keySet()) {
-            String key = (String) k;
-            result.add(new Pattern(
-                    key,
-                    object.isNull(key) ? "" : object.get(key).toString()));
-        }
+        parsePatterns(null, object, new Callback<Pair<String, String>>() {
+            @Override
+            public void run(Pair<String, String> keyValuePair) {
+                result.add(new Pattern(keyValuePair));
+            }
+        });
 
         return result;
     }
