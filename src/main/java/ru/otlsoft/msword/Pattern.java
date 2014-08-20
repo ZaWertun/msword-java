@@ -1,6 +1,5 @@
 package ru.otlsoft.msword;
 
-import javafx.util.Pair;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,8 +15,8 @@ public class Pattern {
     public final String replace;
 
     public Pattern(Pair<String, String> keyValuePair) {
-        this.search = "${" + keyValuePair.getKey() + "}";
-        this.replace = keyValuePair.getValue();
+        this.search = "${" + keyValuePair.key + "}";
+        this.replace = keyValuePair.value;
     }
 
     private static void parsePatterns(String parentKeyPath, JSONObject object, Callback<Pair<String, String>> callback) {
