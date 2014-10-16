@@ -16,18 +16,48 @@ public class Processor {
         Range range = document.getRange();
 
         for (Pattern p : patterns) {
+            String replace = p.replace.replaceAll("\n", "\r");
             boolean keepLooking = true;
             int offset = -p.search.length();
 
             while (keepLooking) {
                 String text = range.text();
-                offset = text.indexOf(p.search, offset + p.replace.length());
+                offset = text.indexOf(p.search, offset + replace.length());
                 if (offset >= 0) {
-                    range.replaceText(p.search, p.replace, offset);
+                    range.replaceText(p.search, replace, offset);
                 } else {
                     keepLooking = false;
                 }
             }
+        }
+    }
+
+    private static void setText(XWPFRun run, String value, Integer pos) {
+        if (value.indexOf('\n') != -1) {
+            String tmp = "";
+            int i;
+
+            for (i = 0; i < value.length(); ++i) {
+                char ch = value.charAt(i);
+
+                if (ch == '\n') {
+                    if (tmp.length() != 0) {
+                        run.setText(tmp);
+                        tmp = "";
+                    }
+                    run.addBreak();
+                } else {
+                    tmp = tmp + ch;
+                }
+            }
+
+            if (tmp.length() != 0) {
+                run.setText(tmp);
+            }
+        } else if (pos != null) {
+            run.setText(value, pos);
+        } else {
+            run.setText(value);
         }
     }
 
@@ -41,9 +71,9 @@ public class Processor {
             if (pattern.replace.isEmpty()) {
                 runs.get(begin).setText("", 0);
             } else if (runs.size() == 1) {
-                runs.get(begin).setText(pattern.replace, 0);
+                setText(runs.get(begin), pattern.replace, 0);
             } else {
-                runs.get(begin).setText(pattern.replace);
+                setText(runs.get(begin), pattern.replace, null);
             }
 
             if (end > begin) {
