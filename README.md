@@ -18,5 +18,5 @@ For pattern above corresponding JSON would look like:
 
 Command line usage:
 ```
-echo '{"what to find1": "replace with1", "what to find 2": "replace with 2", ...}' | java -jar msword-java-1.2.0.jar "path/to/template.doc(x)"
+echo '{"what to find1": "replace with1", "what to find 2": "replace with 2", ...}' | java -jar msword-java-*.jar "path/to/template.doc(x)"
 ```
