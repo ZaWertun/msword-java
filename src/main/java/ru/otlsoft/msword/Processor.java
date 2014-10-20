@@ -45,7 +45,7 @@ public class Processor {
                         run.setText(tmp);
                         tmp = "";
                     }
-                    run.addBreak();
+                    run.addCarriageReturn();
                 } else {
                     tmp = tmp + ch;
                 }
